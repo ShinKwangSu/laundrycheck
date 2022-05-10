@@ -1,0 +1,64 @@
+a {
+	text-decoration: none;
+}
+
+#wrap{
+	width: 100%;
+}
+
+header {
+	background-color: royalblue;
+	border-bottom: 1px solid #c8c8c8;
+	display: flex;
+}
+.logo {
+	width: 580px;
+	margin: 0 auto;
+	text-align: center;
+	/*인라인 속성 갖고 있는 애들도 가운데 정렬*/
+	overflow: hidden;
+}
+
+.logo a {
+	float: left;
+	/*div 자체도 가운데 정렬*/
+}
+
+.logo ul {
+	float: right;
+	margin-top: 5px;
+}
+
+.logo ul li {
+	float: left;
+	margin-left: 20px;
+	line-height: 70px;
+}
+
+.visual {
+	height: 700px;
+	background-color: orange;
+}
+.visual .selectMenu {
+	position:relative;
+	width:340px; /* wrap에 속한 div의 넓이+margin값을 더한 넓이와 높이값 */
+	height:340px;
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%); /* 중앙정렬 */
+}
+.visual .selectMenu > div {
+	width:150px;
+	height:150px;
+	border:1px solid #333;
+	float:left;
+	margin: 10px;
+	box-sizing:border-box; /* border 또한 위치값을 갖기에 div크기가 더 커짐을 방지하기 위한 */
+}
+.visual .selectMenu > div:nth-child(3) {
+	clear: both;
+}
+
+.notice {
+	
+}
