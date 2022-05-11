@@ -6,33 +6,6 @@ const phoneEl = document.querySelector('#phone')
 const btnEl = document.querySelector('button')
 const spanEl = document.querySelector('span')
 
-// btnEl.addEventListener('click', function() {
-//   if (nameEl.value == "") {
-//     nameEl.nextElementSibling.classList.add('warning')
-//     setTimeout(function() {
-//       nameEl.nextElementSibling.classList.remove('warning')
-//     }, 1500)
-//   }
-//   else if (idEl.value == "") {
-//     idEl.nextElementSibling.classList.add('warning')
-//     setTimeout(function() {
-//       idEl.nextElementSibling.classList.remove('warning')
-//     }, 1500)
-//   }
-//   else if (pwEl.value == "") {
-//     pwEl.nextElementSibling.classList.add('warning')
-//     setTimeout(function() {
-//       pwEl.nextElementSibling.classList.remove('warning')
-//     }, 1500)
-//   }
-//   else if (pwCheckEl.value == "") {
-//     pwCheckEl.nextElementSibling.classList.add('warning')
-//     setTimeout(function() {
-//       pwCheckEl.nextElementSibling.classList.remove('warning')
-//     }, 1500)
-//   }
-// })
-
 function pwCheck() {
   if (pwEl.value != "" && pwCheckEl.value != "") {
     if (pwEl.value == pwCheckEl.value) {
@@ -47,6 +20,25 @@ function pwCheck() {
       btnEl.disabled = true
       return false
     }
+  }
+  else if (pwEl.value == "" || pwCheckEl.value == "") {
+    spanEl.textContent = ''
+  }
+}
+
+function onlyNum(event, type) {
+  if (type == "numbers") {
+    if (event.keyCode < 48 || event.keyCode > 57) {
+      return false
+    }
+  }
+}
+
+function chkCharCode(e) {
+  const regExp = /[^0-9a-zA-Z]/g;
+  const ele = e.target;
+  if (regExp.test(ele.value)) {
+    ele.value = ele.value.replace(regExp, '');
   }
 }
 
@@ -80,5 +72,8 @@ function createId() {
     setTimeout(function() {
       phoneEl.nextElementSibling.classList.remove('warning')
     }, 1500)
+  }
+  else {
+    return true
   }
 }
