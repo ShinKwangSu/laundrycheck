@@ -125,7 +125,7 @@ app.get('/', function(req, res) {
 
 // 기기 현황 페이지
 app.get('/macStatus', function(req, res) {
-  res.render('macStatus.ejs')
+  res.render('macstatus.ejs')
 })
 
 // 유의사항 페이지
