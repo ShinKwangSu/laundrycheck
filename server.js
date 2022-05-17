@@ -9,18 +9,19 @@ const MongoClient = require('mongodb').MongoClient
 const methodOverride = require('method-override')
 app.use(methodOverride('_method'))
 app.set('view engine', 'ejs')
+require('dotenv').config()
 
 // css 사용하려면
 app.use('/public', express.static('public'))
 
 var db
-MongoClient.connect('mongodb+srv://admin:1234@cluster0.beyp2.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', { useUnifiedTopology: true }, function(error, client) {
+MongoClient.connect(process.env.DB_URL, { useUnifiedTopology: true }, function(error, client) {
   // 연결되면 할일
   if (error) return console.log(error)
 
   db = client.db('laundrycheck')
 
-  app.listen(8080, function() {
+  app.listen(process.env.PORT, function() {
     console.log('listening on 8080')
   })
 })
