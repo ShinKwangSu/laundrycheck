@@ -124,13 +124,12 @@ app.get('/', function(req, res) {
 })
 
 // 기기 현황 페이지
-app.get('/macstatus', function(req, res) {
-  res.render('macstatus.ejs')
+app.get('/macStatus', function(req, res) {
+  res.render('macStatus.ejs')
 })
 
 // 유의사항 페이지
 app.get('/caution', function(req, res) {
-  res.send('유의사항 페이지')
   res.render('caution.ejs')
 })
 
@@ -140,7 +139,7 @@ app.get('/waiting', 로그인했니, function(req, res) {
 })
 
 // 웨이팅 확인 페이지
-app.get('/checkwait', 로그인했니, function(req, res) {
-  res.render('checkwait.ejs')
+app.get('/checkWait', 로그인했니, function(req, res) {
+  res.render('checkWait.ejs')
 })
 

@@ -1,0 +1,64 @@
+/* COMMON */
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+a {
+  text-decoration: none;
+}
+.container {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  width: 100%;
+	height: 100%;
+}
+
+/* navbar */
+.navbar-collapse > .navbar-nav > .nav-item > a.nav-link {
+	margin-top: 5px;
+}
+.cus-area {
+  position: relative;
+	width: 180px;
+	height: 40px;
+	left: 12%;
+}
+.cus {
+  position: absolute;
+  top: 50%;
+  right: 20%;
+  transform: translate(0, -50%);
+  display: flex;
+}
+.cus li {
+  padding: 0 0 0 16px;
+}
+.cus li a {
+  color: #333;
+}
+.cus li a:hover {
+  color: orange;
+}
+nav.bg-light {
+  height: 50px;
+  background-color: royalblue !important;
+}
+.container-fluid {
+  padding-bottom: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+div > ul > li > a.nav-link {
+  margin-top: 10px;
+}
+div > ul > li > a.nav-link:hover {
+  font-weight: 700;
+}
+div > ul > li > a.nav-link:active {
+  font-weight: 700;
+}
+.navbar-toggler {
+  margin-top: 5px;
+}
