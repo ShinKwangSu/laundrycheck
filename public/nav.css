@@ -14,41 +14,16 @@ a {
 }
 
 /* navbar */
-.navbar-collapse > .navbar-nav > .nav-item > a.nav-link {
-	margin-top: 5px;
-}
-.cus-area {
-  position: relative;
-	width: 180px;
-	height: 40px;
-	left: 12%;
-}
-.cus {
-  position: absolute;
-  top: 50%;
-  right: 20%;
-  transform: translate(0, -50%);
-  display: flex;
-}
-.cus li {
-  padding: 0 0 0 16px;
-}
-.cus li a {
-  color: #333;
-}
-.cus li a:hover {
-  color: orange;
-}
-nav.bg-light {
-  height: 50px;
-  background-color: royalblue !important;
+.navbar {
+  position: fixed;
+  width: 100%;
+  z-index: 99;
 }
 .container-fluid {
-  padding-bottom: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 99;
+  position: relative;
+}
+nav.bg-light {
+  background-color: royalblue !important;
 }
 div > ul > li > a.nav-link {
   margin-top: 10px;
@@ -59,6 +34,76 @@ div > ul > li > a.nav-link:hover {
 div > ul > li > a.nav-link:active {
   font-weight: 700;
 }
-.navbar-toggler {
-  margin-top: 5px;
+.navbar-collapse {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+}
+.navbar-collapse > ul > .nav-item {
+  border-bottom: 1px solid;
+}
+@media ( min-width: 300px ) {
+  .cus-area {
+    position: fixed;
+    width: 180px;
+    height: 40px;
+    top: 1%;
+    right: 20%;
+    transform: translate(0, -3%);
+  }
+  .cus {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translate(0, -50%);
+    width: 180px;
+    height: 20px;
+  }
+  .cus li {
+    padding: 0 0 0 16px;    
+  }
+  .cus li a {
+    color: #333;
+  }
+  .cus li a:hover {
+    color: orange;
+  }
+}
+@media ( min-width: 1000px ) {
+  .cus-area {
+    position: fixed;
+    width: 180px;
+    height: 40px;
+    top: 1%;
+    right: 5%;
+    transform: translate(0, -3%);
+  }
+  .cus {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translate(0, -50%);
+    width: 180px;
+    height: 20px;
+  }
+  .cus li {
+    padding: 0 0 0 16px;    
+  }
+  .cus li a {
+    color: #333;
+  }
+  .cus li a:hover {
+    color: orange;
+  }
+  .navbar-collapse {
+    position: static;
+    background-color: royalblue;
+  }
+  .navbar-collapse > ul > .nav-item {
+    border-bottom: none;
+  }
 }
