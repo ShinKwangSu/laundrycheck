@@ -135,7 +135,6 @@ app.get('/caution', function(req, res) {
 
 // 웨이팅 등록 페이지
 app.get('/waiting', 로그인했니, function(req, res) {
-  res.send('dsa')
   res.render('waiting.ejs')
 })
 
