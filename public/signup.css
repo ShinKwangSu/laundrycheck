@@ -16,12 +16,12 @@ body {
   font-size: 28px;
   color: #111;
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: 50px;
 }
 .int-area {
   position: relative;
   width: 100%;
-  margin-top: 40px;
+  margin-top: 30px;
 }
 .int-area:first-child {
   margin-top: 0;
@@ -62,7 +62,7 @@ body {
 }
 
 .btn-area {
-  margin-top: 50px;
+  margin-top: 40px;
 }
 .btn-area button {
   width: 100%;
