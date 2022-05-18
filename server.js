@@ -140,6 +140,5 @@ app.get('/waiting', 로그인했니, function(req, res) {
 
 // 웨이팅 확인 페이지
 app.get('/checkWait', 로그인했니, function(req, res) {
-  res.render('checkWait.ejs')
+  res.render('checkwait.ejs')
 })
-
