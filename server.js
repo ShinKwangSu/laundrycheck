@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 // 서버를 만들기 위한  기본 세팅 3줄
 const express = require('express')
 const req = require('express/lib/request')
