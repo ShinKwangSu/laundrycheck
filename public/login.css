@@ -10,13 +10,13 @@ body {
 .login-form {
   position: relative;
   width: 100%;
-  padding: 5% 20%;
+  padding: 0 20%;
 }
 .login-form h2 {
   font-size: 28px;
   color: #111;
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: 50px;
 }
 .int-area {
   position: relative;
