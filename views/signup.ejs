@@ -28,7 +28,7 @@
 
     <section class="signup-form">
       <h2>회원가입</h2>
-      <form action="/signup" method="post">
+      <form action="/signup" method="post" onsubmit="return formCheck()">
         <div class="int-area">
           <input type="text" name="name" id="name" autocomplete="off" required />
           <label for="name">이름</label>
@@ -38,20 +38,21 @@
           <label for="id">아이디</label>
         </div>
         <div class="int-area">
-          <input type="password" name="pw" id="pw" autocomplete="off" onkeyup="pwCheck()" required />
+          <input type="password" name="pw" id="pw" autocomplete="off" onkeyup="pwValCheck()" required />
           <label for="pw">비밀번호</label>
+          <span class="pwspan"></span>
         </div>
         <div class="int-area">
-          <input type="password" name="pwcheck" id="pwcheck" autocomplete="off" onkeyup="pwCheck()" required />
+          <input type="password" name="pwcheck" id="pwcheck" autocomplete="off" onkeyup="pwSameCheck()" required />
           <label for="pwcheck">비밀번호 확인</label>
-          <span></span>
+          <span class="pwcheckspan"></span>
         </div>
         <div class="int-area">
           <input type="text" name="phone" id="phone" autocomplete="off" maxlength="11" required />
           <label for="phone">전화번호</label>
         </div>
         <div class="btn-area">
-          <button type="submit" onclick="createId()">회원가입</button>
+          <button type="submit" onclick="register()">회원가입</button>
         </div>
       </form>
     </section>
@@ -63,25 +64,60 @@
       const pwCheckEl = document.querySelector('#pwcheck')
       const phoneEl = document.querySelector('#phone')
       const btnEl = document.querySelector('button')
-      const spanEl = document.querySelector('span')
+      const pwSpanEl = document.querySelector('span.pwspan')
+      const pwCheckSpanEl = document.querySelector('span.pwcheckspan')
       const form = document.querySelector('form')
 
-      function pwCheck() {
-        if (pwEl.value != "" && pwCheckEl.value != "") {
-          if (pwEl.value == pwCheckEl.value) {
-            spanEl.classList.remove('different')
-            spanEl.textContent = '비밀번호가 일치합니다.'
-            return true
-          }
-          else if (pwEl.value != pwCheckEl.value) {
-            spanEl.classList.add('different')
-            spanEl.textContent = '비밀번호가 일치하지 않습니다.'
+      function pwValCheck() {
+        let pw_passed = true
+
+        let pattern1 = /[0-9]/;
+        let pattern2 = /[a-zA-Z]/;
+        let pattern3 = /[~!@\#$%<>^&*]/;     // 원하는 특수문자 추가 제거
+        let pw_msg = "";
+
+        if (pwEl.value == "") {
+          pwCheckEl.value = ''
+          pwSpanEl.textContent = ''
+          pwCheckSpanEl.textContent = ''
+          return false
+        }
+        else if (pwEl.value.indexOf(idEl.value) > -1) {
+          pwSpanEl.classList.add('cannotid')
+          pwSpanEl.textContent = '비밀번호는 ID를 포함할 수 없습니다.'
+          return false
+        }
+        else if(!pattern1.test(pwEl.value) || !pattern2.test(pwEl.value) || !pattern3.test(pwEl.value) || pwEl.value.length < 8 || pwEl.value.length > 50) {
+          pwSpanEl.classList.add('plscheck')
+          pwSpanEl.textContent = '영문+숫자+특수기호 8자리 이상으로!'
+          return false
+        }
+        else if (pattern1.test(pwEl.value) && pattern2.test(pwEl.value) && pattern3.test(pwEl.value) && pwEl.value.length >= 8 && pwEl.value.length <= 50) {
+          pwSpanEl.classList.remove('plscheck')
+          pwSpanEl.classList.remove('cannotid')
+          pwSpanEl.textContent = '훌륭한 비밀번호네요!'
+          return true
+        }
+      }
+
+      function pwSameCheck() {
+        if (pwEl.value == "" || pwCheckEl.value == "") {
+          pwCheckSpanEl.textContent = ''
+          return false
+        }
+        else if (pwEl.value != "" && pwCheckEl.value != "") {
+          if (pwEl.value != pwCheckEl.value) {
+            pwCheckSpanEl.classList.add('different')
+            pwCheckSpanEl.textContent = '비밀번호가 일치하지 않습니다.'
             return false
           }
+          else if (pwEl.value == pwCheckEl.value) {
+            pwCheckSpanEl.classList.remove('different')
+            pwCheckSpanEl.textContent = '비밀번호가 일치합니다.'
+            return true
+          }
         }
-        else if (pwEl.value == "" || pwCheckEl.value == "") {
-          spanEl.textContent = ''
-        }
+        
       }
 
       // 한글 입력 방지 -> 한글은 삭제
@@ -90,6 +126,7 @@
         this.value = v.replace(/[^a-z0-9]/gi, '');
       }
 
+      // 숫자만 입력
       phoneEl.onkeyup = function() {
         var regexp = /[^0-9]/gi;
         this.onkeyup = function(e){
@@ -100,7 +137,7 @@
 
       // submit(회원가입 버튼) 시 유효성 체크
       // 추가적으로 비밀번호의 길이나 특수문자 포함 여부 등의 기능 넣을지 의논
-      function createId() {
+      function register() {
         if (nameEl.value == "") {
           nameEl.nextElementSibling.classList.add('warning')
           setTimeout(function() {
@@ -131,8 +168,15 @@
             phoneEl.nextElementSibling.classList.remove('warning')
           }, 1500)
         }
-        else if (pwCheck()){
+      }
+      function formCheck() {
+        if (pwValCheck() && pwSameCheck()){
           form.submit()
+          return true
+        }
+        else {
+          alert('다시 한번 확인해주세요~')
+          return false
         }
       }
       /*

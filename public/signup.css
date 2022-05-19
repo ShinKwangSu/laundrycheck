@@ -16,7 +16,7 @@ body {
   font-size: 28px;
   color: #111;
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 .int-area {
   position: relative;
@@ -79,13 +79,24 @@ body {
 .btn-area button:active {
   background-color: #162fea;
 }
-span {
+span.pwspan {
   display: block;
-  font-size: 16px;
-  height: 16px;
-  padding: 10px 0 0 0;
+  font-size: 12px;
+  height: 12px;
+  padding: 5px 0 0 0;
   color: green;
 }
-span.different {
+span.pwspan.plscheck,
+span.pwspan.cannotid {
+  color: red;
+}
+span.pwcheckspan {
+  display: block;
+  font-size: 12px;
+  height: 12px;
+  padding: 5px 0 0 0;
+  color: green;
+}
+span.pwcheckspan.different {
   color: red;
 }
