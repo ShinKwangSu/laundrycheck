@@ -1,4 +1,4 @@
-import crypto from "crypto";
+// import crypto from "crypto";
 
 // 서버를 만들기 위한  기본 세팅 3줄
 const express = require('express')
@@ -136,8 +136,8 @@ app.get('/caution', function(req, res) {
 })
 
 // 웨이팅 등록 페이지
-app.get('/waiting', 로그인했니, function(req, res) {
-  res.render('waiting.ejs')
+app.get('/wait', 로그인했니, function(req, res) {
+  res.render('wait.ejs')
 })
 
 // 웨이팅 확인 페이지

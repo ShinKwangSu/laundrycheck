@@ -9,7 +9,7 @@
     <meta property="og:site_name" content="LaundryCheck" />
     <meta property="og:title" content="[LaundryCheck]런드리첵" />
     <meta property="og:description" content="런드리첵은 코인 세탁방의 현황을 알려드립니다." />
-    <meta property="og:image" content="/image/laundrycheck_logo.png" />
+    <meta property="og:image" content="/public/image/laundrycheck_logo.png" />
     <meta property="og:url" content="https://laundry-check.herokuapp.com/" />
 
     <!-- Bootstrap CSS -->
@@ -18,10 +18,10 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css" />
 
-    <link rel="stylesheet" href="../public/nav.css">
-    <link rel="stylesheet" href="../public/login.css">
+    <link rel="stylesheet" href="../public/css/nav.css">
+    <link rel="stylesheet" href="../public/css/login.css">
 
-    <link rel="icon" href="./favicon.png" />
+    <link rel="icon" href="/public/favicon.png" />
     <title>로그인</title>
   </head>
   <body style="overflow: hidden;">
@@ -51,23 +51,23 @@
 
     <script>
       let idEl = document.querySelector('#id')
-    let pwEl = document.querySelector('#pw')
-    let btnEl = document.querySelector('button')
+      let pwEl = document.querySelector('#pw')
+      let btnEl = document.querySelector('button')
 
-    btnEl.addEventListener('click', function() {
-      if (idEl.value == "") {
-        idEl.nextElementSibling.classList.add('warning')
-        setTimeout(function() {
-          idEl.nextElementSibling.classList.remove('warning')
-        }, 1500)
-      }
-      else if (pwEl.value == "") {
-        pwEl.nextElementSibling.classList.add('warning')
-        setTimeout(function() {
-          pwEl.nextElementSibling.classList.remove('warning')
-        }, 1500)
-      }
-    })
+      btnEl.addEventListener('click', function() {
+        if (idEl.value == "") {
+          idEl.nextElementSibling.classList.add('warning')
+          setTimeout(function() {
+            idEl.nextElementSibling.classList.remove('warning')
+          }, 1500)
+        }
+        else if (pwEl.value == "") {
+          pwEl.nextElementSibling.classList.add('warning')
+          setTimeout(function() {
+            pwEl.nextElementSibling.classList.remove('warning')
+          }, 1500)
+        }
+      })
     </script>
 
     <!-- Optional JavaScript; choose one of the two! -->
