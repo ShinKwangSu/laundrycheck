@@ -212,7 +212,7 @@ app.get('/waitcheck', 로그인했니, function(req, res) {
         })
       })
 
-      res.redirect('/aftercheck')
+      res.redirect('/awaituse')
       console.log('웨이팅 사용 후 확인')
 
       //db.counter 내의 totalUse +1 증가(대기사용수+1)
@@ -223,7 +223,7 @@ app.get('/waitcheck', 로그인했니, function(req, res) {
       console.log('웨이팅 사용 후 확인');*/
     }
     else{
-      res.redirect('/beforecheck')
+      res.redirect('/bwaituse')
       console.log('웨이팅 사용 전 확인')
     }
   })
