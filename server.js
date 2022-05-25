@@ -118,29 +118,165 @@ function 로그인했니(req, res, next) {
   }
 }
 
-
-
 // 메인페이지 이동
 app.get('/', function(req, res) {
   res.render('index.ejs')
 })
 
-// 기기 현황 페이지
+// 기기 현황 페이지 이동
 app.get('/macStatus', function(req, res) {
   res.render('macstatus.ejs')
 })
 
-// 유의사항 페이지
+// 유의사항 페이지 이동
 app.get('/caution', function(req, res) {
   res.render('caution.ejs')
 })
 
-// 웨이팅 등록 페이지
+// 웨이팅 등록 페이지 이동
 app.get('/wait', 로그인했니, function(req, res) {
-  res.render('wait.ejs')
+  console.log(req.user);
+
+    //DB에서 데이터 꺼내기 - DB.counter 내의 대기인원수를 찾음
+    db.collection('counter').findOne({name : '대기인원수'}, function(에러, 결과){
+        console.log("/wait 대기인원수 : " + 결과.totalWait) //결과.totalWait = 대기인원수
+        
+        //찾은 데이터를 wait.ejs 안에 넣기
+        //req.user를 사용자라는 이름으로, 결과를 counters라는 이름으로 보내기
+        res.render('wait.ejs', {사용자 : req.user, counters : 결과})
+    })
 })
 
-// 웨이팅 확인 페이지
-app.get('/checkWait', 로그인했니, function(req, res) {
-  res.render('checkwait.ejs')
+app.post('/wait', 로그인여부, function(req, res){
+  //db에서 데이터 꺼내기 - db.counter에서 name이 대기인원수인 데이터 찾기
+  db.collection('counter').findOne({name: '대기인원수'}, function(에러, 결과1){
+    var 대기인원수 = 결과1.totalWait
+    var 대기사용수 = 결과1.totalUse
+
+    //db.waitinfo에 로그인한 유저의 id를 찾아서..
+    db.collection('waitinfo').findOne({userid : req.user.id}, function(에러, 결과2){
+      if(에러) return done(에러)
+
+      //로그인한 유저가 waitinfo에 없거나 이전에 사용한 사람이라면.. 웨이팅 신청 가능으로 db에.waitinfo에 저장
+      if(결과2 == null || 결과2.isUseWait == true) {
+        //db 저장 - 웨이팅 신청 가능으로 db에.waitinfo에 저장 (_id : 총대기인원수+1로 새로운 데이터를 저장)
+        db.collection('waitinfo').insertOne( {_id : 대기인원수 + 1, myNumber : 대기인원수 + 1,
+          userid : req.user.id, wmac : 0, isUseWait : false} , function(에러, 결과){
+          console.log('대기인원 데이터 저장완료');
+    
+          //db 수정 - db.counter 내의 totalWait이라는 항목도 +1 증가(총대기인원수+1)
+          //operator 종류 : $set(변경), $inc(증가), $min(기존값보다 적을 때만 변경), $rename(key값 이름변경)
+          db.collection('counter').updateOne({name: '대기인원수'}, {$inc: {totalWait:1} }, function(에러, 결과){
+            if(에러){return console.log(에러)}
+          })
+        }) 
+        res.redirect('/waitsuccess')
+        console.log('웨이팅 신청성공')
+      }
+      else {
+        res.redirect('/waitfail')
+        console.log('웨이팅 신청실패')
+      }
+    })    
+  })
+})
+
+// 웨이팅 확인 페이지 이동
+app.get('/waitcheck', 로그인했니, function(req, res) {
+  console.log(req.user)
+
+  //db.waitinfo에 로그인한 유저의 id를 찾아서..
+  db.collection('waitinfo').findOne({userid : req.user.id}, function(에러, 결과) {
+      
+    //로그인한 유저가 waitinfo에 없다면..
+    if(결과 == null) {
+      res.redirect('/waitrequest')
+      console.log('웨이팅 신청 안하고 waitcheck한 경우');
+
+      return
+    }
+
+    var 웨이팅사용여부 = 결과.isUseWait
+
+    //사용한 회원 관리
+    //웨이팅을 사용했다면.. 
+    if(웨이팅사용여부){
+      //db.counter 내의 totalWait -1 감소(대기인원수-1)
+      db.collection('counter').updateOne({name: '대기인원수'}, { $inc: {totalWait:-1} }, function(에러1, 결과) {
+        if(에러1){return console.log(에러1)}
+
+        //db.counter 내의 totalUse +1 증가(대기사용수+1)
+        db.collection('counter').updateOne({name: '대기인원수'}, { $inc: {totalUse:1} }, function(에러2, 결과) {
+          if(에러2){return console.log(에러2)}
+
+        })
+      })
+
+      res.redirect('/aftercheck')
+      console.log('웨이팅 사용 후 확인')
+
+      //db.counter 내의 totalUse +1 증가(대기사용수+1)
+      /*db.collection('counter').updateOne({name: '대기사용수'}, {$inc: {totalUse:1} }, function(에러, 결과){
+          if(에러){return console.log(에러)}
+      })
+      res.redirect('/aftercheck')
+      console.log('웨이팅 사용 후 확인');*/
+    }
+    else{
+      res.redirect('/beforecheck')
+      console.log('웨이팅 사용 전 확인')
+    }
+  })
+})
+
+// 웨이팅 신청 실패하면 뿌려주는 페이지
+app.get('/waitalready', 로그인했니, function(req, res) {
+  console.log(req.user)
+  res.render('waitalready.ejs')
+})
+
+// 웨이팅 신청 성공하면 뿌려주는 페이지
+app.get('/waitsuccess', 로그인했니, function(req, res) {
+  console.log(req.user)
+  res.render('waitsuccess.ejs')
+})
+
+// 웨이팅 등록하고 기기 작동시키기 전
+// 본인 대기번호와 앞에 몊명 남았는지 확인 가능
+app.get('/bwaituse', 로그인했니, function(req, res) {
+  console.log(req.user)
+
+  //db.waitinfo에 로그인한 유저의 id 찾기
+  db.collection('waitinfo').findOne({userid : req.user.id}, function(에러, 결과1){
+    var myNumber = 결과1.myNumber
+    console.log("/bwaituse 본인웨이팅번호 : " + myNumber)
+
+    //db.counter에서 name이 대기인원수인 데이터 찾기
+    db.collection('counter').findOne({name: '대기인원수'}, function(에러, 결과2){
+      var totalWait = 결과2.totalWait
+      var totalUse = 결과2.totalUse
+      var left = myNumber - totalUse - 1
+
+      console.log("/bwaituse 대기인원수 : " + totalWait)
+      console.log("/bwaituse 대기사용수 : " + totalUse)
+      console.log("/bwaituse 앞에남은인원수 : " + left)
+
+      //찾은 데이터를 beforecheck.ejs 안에 넣기
+      //req.user를 사용자라는 이름으로 보내기
+      res.render('bwaituse.ejs', {사용자 : req.user, 본인웨이팅번호 : 결과1, 대기사용수 : 결과2})
+    })
+  })
+})
+
+// 웨이팅 등록하고 기기 작동시킨 후
+// 
+app.get('/awaituse', 로그인했니, function(req, res) {
+  console.log(req.user)
+  res.render('awaituse.ejs')
+})
+
+// 웨이팅 등록 안하고 웨이팅 확인하면
+app.get('/waitreq', 로그인했니, function(req, res) {
+  console.log(req.user)
+  res.render('waitreq.ejs')
 })

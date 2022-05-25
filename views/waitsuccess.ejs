@@ -21,42 +21,24 @@
     <link rel="stylesheet" href="../public/css/nav.css">
 
     <link rel="icon" href="/public/favicon.png" />
-    <title>웨이팅 등록</title>
+    <title>웨이팅 확인</title>
   </head>
   <body style="overflow: hidden;">
 
     <%- include('nav.html') %>
 
-    <h4 class="ml-2 my-3"><strong>웨이팅 페이지</strong></h4>
+    <h4 class="ml-2 my-3"><strong>웨이팅 신청성공 페이지</strong></h4>
 
-    <form action="/wait" method="POST">
-      <div class="container" style="background-color:lightblue; padding:30px;">
-        <div class="row">
-          <div class="col text-center">
-            <p> 웨이팅 할 기기를 선택해주세요. </p>
-            <button class="btn btn-primary" type="submit">세탁기</button>
-            <button class="btn btn-primary">건조기</button>
-            <br>
-          </div>
-        </div>
-      </div>
-    </form>
-
-    <div class="container" style="padding:30px">
+    <div class="container">
       <div class="row">
         <div class="col text-center">
-          <p> <현재 세탁기 대기인원수> </p>
-          <h4><%= counters.totalWait %> 명</h4>
-          <br>
-        </div>
-        <div class="col text-center">
-          <p> <현재 건조기 대기인원수> </p>
-          <h4>0 명</h4>
+          <p style="color:blue"> 웨이팅 신청이 완료되었습니다. </p>
+          <p> 자세한 내용은 웨이팅 확인 페이지에서 확인해주세요.</p>
+          <p> (Menu > WaitingCheck)</p>
           <br>
         </div>
       </div>
     </div>
-
 
 
 
