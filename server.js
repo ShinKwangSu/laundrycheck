@@ -147,7 +147,7 @@ app.get('/wait', 로그인했니, function(req, res) {
     })
 })
 
-app.post('/wait', 로그인여부, function(req, res){
+app.post('/wait', 로그인했니, function(req, res){
   //db에서 데이터 꺼내기 - db.counter에서 name이 대기인원수인 데이터 찾기
   db.collection('counter').findOne({name: '대기인원수'}, function(에러, 결과1){
     var 대기인원수 = 결과1.totalWait
