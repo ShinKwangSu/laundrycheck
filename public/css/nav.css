@@ -70,6 +70,9 @@ div > ul > li > a.nav-link:active {
   .cus li a:hover {
     color: #fff;
   }
+  .cus li a:active {
+    color: #fff;
+  }
 }
 @media ( min-width: 1000px ) {
   .cus-area {
@@ -96,6 +99,9 @@ div > ul > li > a.nav-link:active {
     color: #333;
   }
   .cus li a:hover {
+    color: #fff;
+  }
+  .cus li a:active {
     color: #fff;
   }
   .navbar-collapse {

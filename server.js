@@ -114,7 +114,7 @@ function 로그인했니(req, res, next) {
   if (req.user) {
     next()
   } else {
-    res.send('로그인 해주세요')
+    res.render('loginreq.ejs')
   }
 }
 

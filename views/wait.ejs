@@ -19,41 +19,34 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css" />
 
     <link rel="stylesheet" href="../public/css/nav.css">
+    <link rel="stylesheet" href="../public/css/background.css">
 
-    <link rel="icon" href="/public/favicon.png" />
+    <link rel="icon" href="/public/favicon.ico" />
     <title>웨이팅 등록</title>
   </head>
   <body style="overflow: hidden;">
 
     <%- include('nav.html') %>
 
-    <h4 class="ml-2 my-3"><strong>웨이팅 페이지</strong></h4>
+    <h4>웨이팅 페이지</h4>
 
     <form action="/wait" method="POST">
-      <div class="container" style="background-color:lightblue; padding:30px;">
-        <div class="row">
-          <div class="col text-center">
-            <p> 웨이팅 할 기기를 선택해주세요. </p>
-            <button class="btn btn-primary" type="submit">세탁기</button>
-            <button class="btn btn-primary">건조기</button>
-            <br>
-          </div>
-        </div>
+      <div class="btn-area">
+        <p>웨이팅 할 기기를 선택해주세요.</p>
+        <button class="btn btn-primary" type="submit">세탁기</button>
+        <button class="btn btn-primary">건조기</button>
+        <br>
       </div>
     </form>
 
-    <div class="container" style="padding:30px">
-      <div class="row">
-        <div class="col text-center">
-          <p> <현재 세탁기 대기인원수> </p>
-          <h4><%= counters.totalWait %> 명</h4>
-          <br>
-        </div>
-        <div class="col text-center">
-          <p> <현재 건조기 대기인원수> </p>
-          <h4>0 명</h4>
-          <br>
-        </div>
+    <div class="count-area">
+      <div class="wash-count">
+        <p> &#60;세탁기 대기인원수&#62; </p>
+        <h4><%= counters.totalWait %> 명</h4>
+      </div>
+      <div class="dry-count">
+        <p> &#60;건조기 대기인원수&#62; </p>
+        <h4>0 명</h4>
       </div>
     </div>
 

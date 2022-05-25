@@ -109,3 +109,18 @@ body {
   right: 50%;
   background-color: #111;
 }
+h1.req {
+  font-size: 20px;
+  text-align: center;
+  position: absolute;
+  top: 20%;
+  color: #5F9EA0 !important;
+  animation: warning .7s ease;
+  animation-iteration-count: 1;
+}
+@keyframes req {
+  0% {transform: translateX(-8px);}
+  25% {transform: translateX(8px);}
+  50% {transform: translateX(-8px);}
+  75% {transform: translateX(8px);}
+}
