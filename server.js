@@ -12,6 +12,7 @@ const methodOverride = require('method-override')
 app.use(methodOverride('_method'))
 app.set('view engine', 'ejs')
 require('dotenv').config()
+const cookies = require('cookie-parser');
 
 // css 사용하려면
 app.use('/public', express.static('public'))
@@ -32,11 +33,17 @@ MongoClient.connect(process.env.DB_URL, { useUnifiedTopology: true }, function(e
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
+const { render } = require('express/lib/response')
+const connect = require('passport/lib/framework/connect')
 
 // app.use() -> 미들웨어
 // 웹서버는 요청-응답해주는 머신
 // 미들웨어 : 요청-응답 중간에 뭔가 실행되는 코드
-app.use(session({secret : '비밀코드', resave : true, saveUninitialized: false}));
+app.use(session({
+  secret : '비밀코드', 
+  resave : true, 
+  saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session()); 
 
@@ -45,16 +52,19 @@ app.get('/login', function(req, res) {
 })
 
 app.post('/login', passport.authenticate('local', {
-  failureRedirect : '/fail'
+  failureRedirect : '/login'
 }), function(req, res) {
   console.log('로그인 성공')
-  res.redirect('/')
+  req.session.nickname = req.body.id
+  req.session.save(function() {
+    res.redirect('/')
+  })
 })
 
-app.get('/fail', function(req, res) {
-  res.redirect('/login')
-  console.log('로그인 실패')
-})
+// app.get('/fail', function(req, res) {
+//   res.redirect('/login')
+//   console.log('로그인 실패')
+// })
 
 // 인증하는 방법을 Strategy라 칭함
 // done() 함수의 파라미터는 3개가 올 수 있다.
@@ -98,6 +108,16 @@ passport.deserializeUser(function (아이디, done) {  // 아이디는 위에 �
   })
 }); 
 
+// 로그아웃
+app.get('/logout', function(req, res) {
+  req.logout()
+  
+  req.session.save(function () {
+    res.clearCookie('connect.sid')
+    res.redirect('/')
+  })
+})
+
 // 회원가입
 app.get('/signup', function(req, res) {
   res.render('signup.ejs')
@@ -113,6 +133,7 @@ app.post('/signup', function(req, res) {
 function 로그인했니(req, res, next) {
   if (req.user) {
     next()
+    return true
   } else {
     res.render('loginreq.ejs')
   }
@@ -120,31 +141,63 @@ function 로그인했니(req, res, next) {
 
 // 메인페이지 이동
 app.get('/', function(req, res) {
-  res.render('index.ejs')
+  if (!req.session.nickname) {
+    res.render('index.ejs', {session: "true"});
+  }
+  else {
+    res.render('index.ejs', {session: "false"});
+  }
+  // res.render('index.ejs')
 })
 
 // 기기 현황 페이지 이동
 app.get('/macStatus', function(req, res) {
-  res.render('macstatus.ejs')
+  if (!req.session.nickname) {
+    res.render('macstatus.ejs', {session: "true"});
+  }
+  else {
+    res.render('macstatus.ejs', {session: "false"});
+  }
+  // res.render('macstatus.ejs')
 })
 
 // 유의사항 페이지 이동
 app.get('/caution', function(req, res) {
-  res.render('caution.ejs')
+  if (!req.session.nickname) {
+    res.render('caution.ejs', {session: "true"});
+  }
+  else {
+    res.render('caution.ejs', {session: "false"});
+  }
+  // res.render('caution.ejs')
 })
 
 // 웨이팅 등록 페이지 이동
 app.get('/wait', 로그인했니, function(req, res) {
   console.log(req.user);
 
+  if (!req.session.nickname) {
     //DB에서 데이터 꺼내기 - DB.counter 내의 대기인원수를 찾음
     db.collection('counter').findOne({name : '대기인원수'}, function(에러, 결과){
-        console.log("/wait 대기인원수 : " + 결과.totalWait) //결과.totalWait = 대기인원수
-        
-        //찾은 데이터를 wait.ejs 안에 넣기
-        //req.user를 사용자라는 이름으로, 결과를 counters라는 이름으로 보내기
-        res.render('wait.ejs', {사용자 : req.user, counters : 결과})
+      console.log("/wait 대기인원수 : " + 결과.totalWait) //결과.totalWait = 대기인원수
+    
+      //찾은 데이터를 wait.ejs 안에 넣기
+      //req.user를 사용자라는 이름으로, 결과를 counters라는 이름으로 보내기
+      res.render('wait.ejs', {사용자 : req.user, counters : 결과, session : "true"})
     })
+  }
+  else {
+    //DB에서 데이터 꺼내기 - DB.counter 내의 대기인원수를 찾음
+    db.collection('counter').findOne({name : '대기인원수'}, function(에러, 결과){
+      console.log("/wait 대기인원수 : " + 결과.totalWait) //결과.totalWait = 대기인원수
+      
+      //찾은 데이터를 wait.ejs 안에 넣기
+      //req.user를 사용자라는 이름으로, 결과를 counters라는 이름으로 보내기
+      res.render('wait.ejs', {사용자 : req.user, counters : 결과, session: "false"})
+    })
+  }
+
+  
 })
 
 app.post('/wait', 로그인했니, function(req, res){
@@ -212,7 +265,7 @@ app.get('/waitcheck', 로그인했니, function(req, res) {
         })
       })
 
-      res.redirect('/aftercheck')
+      res.redirect('/awaituse')
       console.log('웨이팅 사용 후 확인')
 
       //db.counter 내의 totalUse +1 증가(대기사용수+1)
@@ -223,7 +276,7 @@ app.get('/waitcheck', 로그인했니, function(req, res) {
       console.log('웨이팅 사용 후 확인');*/
     }
     else{
-      res.redirect('/beforecheck')
+      res.redirect('/bwaituse')
       console.log('웨이팅 사용 전 확인')
     }
   })

@@ -43,67 +43,7 @@ div > ul > li > a.nav-link:active {
 .navbar-collapse > ul > .nav-item {
   border-bottom: 1px solid #888;
 }
-@media ( min-width: 300px ) {
-  .cus-area {
-    position: fixed;
-    width: 180px;
-    height: 40px;
-    top: 1%;
-    right: 20%;
-    transform: translate(0, -3%);
-  }
-  .cus {
-    display: flex;
-    position: absolute;
-    top: 50%;
-    left: 10%;
-    transform: translate(0, -50%);
-    width: 180px;
-    height: 20px;
-  }
-  .cus li {
-    padding: 0 0 0 16px;    
-  }
-  .cus li a {
-    color: #333;
-  }
-  .cus li a:hover {
-    color: #fff;
-  }
-  .cus li a:active {
-    color: #fff;
-  }
-}
 @media ( min-width: 1000px ) {
-  .cus-area {
-    position: fixed;
-    width: 180px;
-    height: 40px;
-    top: 1%;
-    right: 5%;
-    transform: translate(0, -3%);
-  }
-  .cus {
-    display: flex;
-    position: absolute;
-    top: 50%;
-    left: 10%;
-    transform: translate(0, -50%);
-    width: 180px;
-    height: 20px;
-  }
-  .cus li {
-    padding: 0 0 0 16px;    
-  }
-  .cus li a {
-    color: #333;
-  }
-  .cus li a:hover {
-    color: #fff;
-  }
-  .cus li a:active {
-    color: #fff;
-  }
   .navbar-collapse {
     position: static;
     background-color: royalblue;
@@ -111,4 +51,27 @@ div > ul > li > a.nav-link:active {
   .navbar-collapse > ul > .nav-item {
     border-bottom: none;
   }
+}
+.cus-area {
+	width: 100%;
+	height: 30px;
+	position: relative;
+}
+.cus {
+	display: flex;
+	position: absolute;
+	top: 10px;
+	right: 20px;
+}
+.cus li {
+	padding: 0 0 0 16px;
+}
+.cus li a {
+	color: #333;
+}
+.cus li a:hover {
+	color: orange;
+}
+.cus li a:active {
+	color: orange;
 }
