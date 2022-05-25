@@ -243,7 +243,7 @@ app.get('/waitcheck', 로그인했니, function(req, res) {
       
     //로그인한 유저가 waitinfo에 없다면..
     if(결과 == null) {
-      res.redirect('/waitrequest')
+      res.redirect('/awaituse')
       console.log('웨이팅 신청 안하고 waitcheck한 경우');
 
       return
@@ -251,29 +251,10 @@ app.get('/waitcheck', 로그인했니, function(req, res) {
 
     var 웨이팅사용여부 = 결과.isUseWait
 
-    //사용한 회원 관리
-    //웨이팅을 사용했다면.. 
+    //웨이팅을 사용여부에 따라 다른 페이지 출력
     if(웨이팅사용여부){
-      //db.counter 내의 totalWait -1 감소(대기인원수-1)
-      db.collection('counter').updateOne({name: '대기인원수'}, { $inc: {totalWait:-1} }, function(에러1, 결과) {
-        if(에러1){return console.log(에러1)}
-
-        //db.counter 내의 totalUse +1 증가(대기사용수+1)
-        db.collection('counter').updateOne({name: '대기인원수'}, { $inc: {totalUse:1} }, function(에러2, 결과) {
-          if(에러2){return console.log(에러2)}
-
-        })
-      })
-
       res.redirect('/awaituse')
       console.log('웨이팅 사용 후 확인')
-
-      //db.counter 내의 totalUse +1 증가(대기사용수+1)
-      /*db.collection('counter').updateOne({name: '대기사용수'}, {$inc: {totalUse:1} }, function(에러, 결과){
-          if(에러){return console.log(에러)}
-      })
-      res.redirect('/aftercheck')
-      console.log('웨이팅 사용 후 확인');*/
     }
     else{
       res.redirect('/bwaituse')
@@ -314,7 +295,7 @@ app.get('/bwaituse', 로그인했니, function(req, res) {
       console.log("/bwaituse 대기사용수 : " + totalUse)
       console.log("/bwaituse 앞에남은인원수 : " + left)
 
-      //찾은 데이터를 beforecheck.ejs 안에 넣기
+      //찾은 데이터를 bwaituse.ejs 안에 넣기
       //req.user를 사용자라는 이름으로 보내기
       res.render('bwaituse.ejs', {사용자 : req.user, 본인웨이팅번호 : 결과1, 대기사용수 : 결과2})
     })
@@ -328,8 +309,44 @@ app.get('/awaituse', 로그인했니, function(req, res) {
   res.render('awaituse.ejs')
 })
 
-// 웨이팅 등록 안하고 웨이팅 확인하면
-app.get('/waitreq', 로그인했니, function(req, res) {
+// 마이페이지
+app.get('/mypage', 로그인했니, function(req, res) {
   console.log(req.user)
-  res.render('waitreq.ejs')
+  res.render('mypage.ejs', {사용자 : req.user})
+})
+
+app.post('/mypage', 로그인했니, function(req, res) {
+  //사용버튼을 클릭했으니, db.waitinfo 내의 isUseWait을 true로 변경
+  db.collection('waitinfo').updateOne({userid : req.user.id}, { $set: {isUseWait:true} }, function(에러3, 결과){
+    if(에러3){return console.log(에러3)}
+
+    //db.waitinfo에 로그인한 유저의 id를 찾아서..
+    db.collection('waitinfo').findOne({userid : req.user.id}, function(에러, 결과1) {
+      var 웨이팅사용여부 = 결과1.isUseWait
+
+      //로그인한 유저가 waitinfo에 없다면..
+      if(결과1 == null) {
+        res.redirect('/awaituse')
+        console.log('웨이팅 신청 안하고 waitcheck함');
+        return
+      }
+
+      console.log("웨이팅사용여부 : " + 웨이팅사용여부);
+      //사용한 회원 관리
+      if(웨이팅사용여부){ //웨이팅을 사용했다면..
+        //db.counter 내의 totalWait -1 감소(대기인원수-1)
+        db.collection('counter').updateOne({name: '대기인원수'}, { $inc: {totalWait:-1} }, function(에러1, 결과) {
+          if(에러1){return console.log(에러1)}
+
+          //db.counter 내의 totalUse +1 증가(대기사용수+1)
+          db.collection('counter').updateOne({name: '대기인원수'}, { $inc: {totalUse:1} }, function(에러2, 결과) {
+            if(에러2){return console.log(에러2)}
+
+            console.log("웨이팅 사용완료 버튼 클릭")
+            res.redirect('/mypage')
+          })
+        })
+      }
+    })
+  })
 })
