@@ -186,23 +186,26 @@ app.get('/wait', 로그인했니, function(req, res) {
     })
 })
 
+/*
 app.post('/wait', 로그인했니, function(req, res){
   //db에서 데이터 꺼내기 - db.counter에서 name이 대기인원수인 데이터 찾기
   db.collection('counter').findOne({name: '대기인원수'}, function(에러, 결과1){
     var 대기인원수 = 결과1.totalWait
     var 대기사용수 = 결과1.totalUse
 
-    //db.waitinfo에 로그인한 유저의 id를 찾아서..
+    //db.waitinfo에 로그인한 유저의 id를 찾아서.. --------> find()로 변경해야할듯 
     db.collection('waitinfo').findOne({userid : req.user.id}, function(에러, 결과2){
       if(에러) return done(에러)
 
       //로그인한 유저가 waitinfo에 없거나 이전에 사용한 사람이라면.. 웨이팅 신청 가능으로 db에.waitinfo에 저장
       if(결과2 == null || 결과2.isUseWait == true) {
+
+        console.log(결과2)
+
         //db 저장 - 웨이팅 신청 가능으로 db에.waitinfo에 저장 (_id : 총대기인원수+1로 새로운 데이터를 저장)
         db.collection('waitinfo').insertOne( {_id : 대기인원수 + 1, myNumber : 대기인원수 + 1,
           userid : req.user.id, wmac : 0, isUseWait : false} , function(에러, 결과){
           console.log('대기인원 데이터 저장완료');
-          console.log(에러)
           console.log(결과);
 
     
@@ -216,13 +219,89 @@ app.post('/wait', 로그인했니, function(req, res){
         res.redirect('/waitsuccess')
         console.log('웨이팅 신청성공')
       }
-      else {
+      else if (결과2.isUseWait == false) {
         res.redirect('/waitalready')
         console.log('웨이팅 신청 되어있음')
       }
     })    
   })
+})*/
+
+
+app.post('/wait', 로그인했니, function(req, res){
+  //db에서 데이터 꺼내기 - db.counter에서 name이 대기인원수인 데이터 찾기
+  db.collection('counter').findOne({name: '대기인원수'}, function(에러, 결과1){
+    var 대기인원수 = 결과1.totalWait
+    var 대기사용수 = 결과1.totalUse
+
+    // ------------------- 웨이팅 등록 최초 1회 ---------------
+    db.collection('waitinfo').findOne({userid : req.user.id}, function(에러, 결과2) {
+      if(에러) return done(에러)
+
+      //로그인한 유저가 waitinfo에 없거나 이전에 사용한 사람이라면.. 웨이팅 신청 가능으로 db에.waitinfo에 저장
+      if(결과2 == null) {
+
+        //db 저장 - 웨이팅 신청 가능으로 db에.waitinfo에 저장 (_id : 총대기인원수+1로 새로운 데이터를 저장)
+        db.collection('waitinfo').insertOne( {_id : 대기인원수 + 1, myNumber : 대기인원수 + 1,
+          userid : req.user.id, wmac : 0, isUseWait : false} , function(에러, 결과){
+          console.log('대기인원 데이터 저장완료');
+          console.log(결과);
+
+    
+          //db 수정 - db.counter 내의 totalWait이라는 항목도 +1 증가(총대기인원수+1)
+          //operator 종류 : $set(변경), $inc(증가), $min(기존값보다 적을 때만 변경), $rename(key값 이름변경)
+          db.collection('counter').updateOne({name: '대기인원수'}, {$inc: {totalWait:1} }, function(에러, 결과){
+            if(에러){return console.log(에러)}
+          })
+        })
+
+        res.redirect('/waitsuccess')
+        console.log('웨이팅 신청 성공')
+      }
+      else {
+        console.log('웨이팅 신청 실패')
+      }
+    })
+
+    //db.waitinfo에 로그인한 유저의 id를 찾아서.. --------> find()로 변경해야할듯 
+    db.collection('waitinfo').find({userid : req.user.id}).toArray(function(에러, 결과2) {
+      if(에러) return done(에러)
+
+      var 찾았니
+      for (let i = 0; i < 결과2.length; i++) {
+        if (결과2[i].isUseWait == true) {
+          찾았니 = "못찾음"
+        }
+        else {
+          찾았니 = "찾음"
+        }
+      }
+
+      //로그인한 유저가 waitinfo에 없거나 이전에 사용한 사람이라면.. 웨이팅 신청 가능으로 db에.waitinfo에 저장
+      if (찾았니 == "못찾음") {
+
+        //db 저장 - 웨이팅 신청 가능으로 db에.waitinfo에 저장 (_id : 총대기인원수+1로 새로운 데이터를 저장)
+        db.collection('waitinfo').insertOne( {_id : 대기인원수 + 1, myNumber : 대기인원수 + 1, userid : req.user.id, wmac : 0, isUseWait : false} , function(에러, 결과){
+          console.log('대기인원 데이터 저장완료');
+          console.log(결과);
+
+          //db 수정 - db.counter 내의 totalWait이라는 항목도 +1 증가(총대기인원수+1)
+          //operator 종류 : $set(변경), $inc(증가), $min(기존값보다 적을 때만 변경), $rename(key값 이름변경)
+          db.collection('counter').updateOne({name: '대기인원수'}, {$inc: {totalWait:1} }, function(에러, 결과){
+            if(에러){return console.log(에러)}
+            res.redirect('/waitsuccess')
+            console.log('웨이팅 신청성공')
+          })
+        })
+      }
+      else if (찾았니 == "찾음") {
+        res.redirect('/waitalready')
+        console.log('웨이팅 신청 되어있음')
+      }
+    })
+  })
 })
+
 
 // 웨이팅 확인 페이지 이동
 app.get('/waitcheck', 로그인했니, function(req, res) {
@@ -489,7 +568,7 @@ app.post('/mypage', 로그인했니, function(req, res) {
             if(에러2){return console.log(에러2)}
 
             console.log("웨이팅 사용완료 버튼 클릭")
-            res.redirect('/mypage')
+            res.redirect('/')
           })
         })
       }

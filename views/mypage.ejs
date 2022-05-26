@@ -27,23 +27,19 @@
 
     <%- include('nav.html') %>
 
-    <h4 class="ml-2 my-3"><strong><%= 사용자.id %> 님의 마이페이지</strong></h4>
+    <h4 class="ml-2 my-3 text-center"><%= 사용자.id %> 님의 마이페이지</h4>
 
     <form action="/mypage" method="POST">
-      <div class="container" style="background-color:lightblue; padding:30px;">
-        <div class="row">
-          <div class="col text-center">
-            <h4> 안녕하세요 "<%= 사용자.id %>" 님!</h4>
-            <p style="color:red"> 웨이팅 사용 시 아래 버튼을 눌러주세요. </p>
-            <button class="btn btn-primary" type="submit">웨이팅사용</button>
-            <br>
-          </div>
+      <div style="background-color:lightblue; padding:30px;">
+        <div class="col text-center">
+          <h4 style="margin-bottom: 10px;"> 안녕하세요 "<%= 사용자.id %>" 님!</h4>
+          <p style="color:red; margin-bottom: 10px;"> 웨이팅 사용 시 아래 버튼을 눌러주세요. </p>
+          <button class="btn btn-primary" type="submit">웨이팅사용</button>
+          <br>
         </div>
       </div>
     </form>
     
-
-
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
