@@ -176,26 +176,14 @@ app.get('/caution', function(req, res) {
 app.get('/wait', 로그인했니, function(req, res) {
   console.log(req.user);
 
-  if (!req.session.nickname) {
     //DB에서 데이터 꺼내기 - DB.counter 내의 대기인원수를 찾음
     db.collection('counter').findOne({name : '대기인원수'}, function(에러, 결과){
       console.log("/wait 대기인원수 : " + 결과.totalWait) //결과.totalWait = 대기인원수
     
       //찾은 데이터를 wait.ejs 안에 넣기
       //req.user를 사용자라는 이름으로, 결과를 counters라는 이름으로 보내기
-      res.render('wait.ejs', {사용자 : req.user, counters : 결과, session : "true"})
+      res.render('wait.ejs', {사용자 : req.user, counters : 결과})
     })
-  }
-  else {
-    //DB에서 데이터 꺼내기 - DB.counter 내의 대기인원수를 찾음
-    db.collection('counter').findOne({name : '대기인원수'}, function(에러, 결과){
-      console.log("/wait 대기인원수 : " + 결과.totalWait) //결과.totalWait = 대기인원수
-      
-      //찾은 데이터를 wait.ejs 안에 넣기
-      //req.user를 사용자라는 이름으로, 결과를 counters라는 이름으로 보내기
-      res.render('wait.ejs', {사용자 : req.user, counters : 결과, session: "false"})
-    })
-  }
 })
 
 app.post('/wait', 로그인했니, function(req, res){
@@ -214,6 +202,7 @@ app.post('/wait', 로그인했니, function(req, res){
         db.collection('waitinfo').insertOne( {_id : 대기인원수 + 1, myNumber : 대기인원수 + 1,
           userid : req.user.id, wmac : 0, isUseWait : false} , function(에러, 결과){
           console.log('대기인원 데이터 저장완료');
+          console.log(에러)
           console.log(결과);
 
     
@@ -224,13 +213,11 @@ app.post('/wait', 로그인했니, function(req, res){
           })
         })
 
-        //res.redirect('/waitsuccess')
-        res.render('waitsuccess.ejs', {사용자 : req.user, session: "false"})
+        res.redirect('/waitsuccess')
         console.log('웨이팅 신청성공')
       }
       else {
-        //res.redirect('/waitalready')
-        res.render('waitalready.ejs', {사용자 : req.user, session: "false"})
+        res.redirect('/waitalready')
         console.log('웨이팅 신청 되어있음')
       }
     })    
