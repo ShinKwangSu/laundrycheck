@@ -53,24 +53,6 @@
       </div>
     </div>
 
-    <script>
-      let loginBtnEl = document.querySelector('.login-btn')
-      let signupBtnEl = document.querySelector('.signup-btn')
-      const session = "<%= session %>";
-      if (session === "false") {
-        loginBtnEl.textContent = "로그아웃";
-        loginBtnEl.href = "/logout";
-        signupBtnEl.textContent = "마이페이지";
-        signupBtnEl.href = "/mypage";
-      }
-      else {
-        loginBtnEl.textContent = "로그인";
-        loginBtnEl.href = "/login";
-        signupBtnEl.textContent = "회원가입";
-        signupBtnEl.href = "/signup";
-      }
-    </script>
-
 
     <!-- Optional JavaScript; choose one of the two! -->
 
