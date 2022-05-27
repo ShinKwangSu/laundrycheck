@@ -242,8 +242,7 @@ app.post('/wait', 로그인했니, function(req, res){
       if(결과2 == null) {
 
         //db 저장 - 웨이팅 신청 가능으로 db에.waitinfo에 저장 (_id : 총대기인원수+1로 새로운 데이터를 저장)
-        db.collection('waitinfo').insertOne( {_id : 대기인원수 + 1, myNumber : 대기인원수 + 1,
-          userid : req.user.id, wmac : 0, isUseWait : false} , function(에러, 결과){
+        db.collection('waitinfo').insertOne( {_id : 대기인원수 + 1, myNumber : 대기인원수 + 1, userid : req.user.id, wmac : 0, isUseWait : false} , function(에러, 결과){
           console.log('대기인원 데이터 저장완료');
           console.log(결과);
 
@@ -257,6 +256,7 @@ app.post('/wait', 로그인했니, function(req, res){
 
         res.redirect('/waitsuccess')
         console.log('웨이팅 신청 성공')
+        return
       }
       else {
         console.log('웨이팅 신청 실패')
