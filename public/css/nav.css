@@ -22,7 +22,7 @@ a {
   position: relative;
 }
 nav.bg-light {
-  background-color: royalblue !important;
+  background-color: #A5D8FA !important;
 }
 div > ul > li > a.nav-link {
   margin-top: 10px;
@@ -41,7 +41,7 @@ div > ul > li > a.nav-link:active {
   background-color: #fff;
 }
 .navbar-collapse > ul > .nav-item {
-  border-bottom: 1px solid #888;
+  border-bottom: 1px solid #dcdcdc;
 }
 @media ( min-width: 1000px ) {
   .navbar-collapse {
