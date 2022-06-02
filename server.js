@@ -192,14 +192,14 @@ app.post('/wait', 로그인했니, function(req, res){
   db.collection('counter').findOne({name: '대기인원수'}, function(에러, 결과1){
     var waitinfo개수 = 결과1.totalWait + 결과1.totalUse
 
-    // ------------------- 웨이팅 등록 최초 1회 ---------------
     //db.waitinfo에 로그인한 유저의 id를 찾아서.. --------> find()로 변경해야할듯 
     db.collection('waitinfo').find({userid : req.user.id}).toArray(function(에러, 결과2) {
       if(에러) return done(에러)
 
+      // ------------------- 웨이팅 등록 최초 1회 ---------------
       if(결과2.length == 0) {
 
-        //db 저장 - 웨이팅 신청 가능으로 db에.waitinfo에 저장 (_id : 총대기인원수+1로 새로운 데이터를 저장)
+        //db 저장 - 웨이팅 신청 가능으로 db에.waitinfo에 저장 (_id : waitinfo개수+1로 새로운 데이터를 저장)
         db.collection('waitinfo').insertOne( {_id : waitinfo개수 + 1, myNumber : waitinfo개수 + 1, userid : req.user.id, wmac : 0, isUseWait : false} , function(에러, 결과){
           console.log("결과 : " + 결과)
           console.log("에러 : " + 에러)
@@ -219,6 +219,7 @@ app.post('/wait', 로그인했니, function(req, res){
           }
         })
       }
+      // ------------------- 웨이팅 등록 재사용 ---------------
       else {
         var 찾았니
         for (let i = 0; i < 결과2.length; i++) {
