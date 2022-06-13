@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "heroku-prebuild": "npm install",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build",
+    "dev": "nodemon server.js"
   },
   "engines": {
     "node": "12.14.1",
@@ -33,6 +34,10 @@
     "method-override": "^3.0.0",
     "mongodb": "^4.6.0",
     "passport": "^0.5.2",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "serialport": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
   }
 }

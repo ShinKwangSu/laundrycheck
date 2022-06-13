@@ -46,7 +46,7 @@ div > ul > li > a.nav-link:active {
 @media ( min-width: 1000px ) {
   .navbar-collapse {
     position: static;
-    background-color: royalblue;
+    background-color: #A5D8FA;
   }
   .navbar-collapse > ul > .nav-item {
     border-bottom: none;

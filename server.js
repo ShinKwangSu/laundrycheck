@@ -12,7 +12,37 @@ const methodOverride = require('method-override')
 app.use(methodOverride('_method'))
 app.set('view engine', 'ejs')
 require('dotenv').config()
-const cookies = require('cookie-parser');
+
+//-------------------------------------------------------------------
+var SerialPort = require("serialport")
+
+const parsers = SerialPort.parsers;
+const parser = new parsers.Readline({
+  delimeter: '\r\n'
+})
+
+var port = new SerialPort('COM3', {
+  autoOpen: false,
+  baudRate: 9600,
+  dataBits: 8,
+  parity: 'none',
+  stopBits: 1,
+  flowControl: false
+})
+
+port.pipe(parser)
+
+port.open(function() {
+  console.log('connected.........')
+  parser.on('data', function(data) {
+    console.log(data)
+  })
+})
+
+parser.on('data', function(data) {
+  console.log(data)
+})
+//-------------------------------------------------------------------
 
 // css 사용하려면
 app.use('/public', express.static('public'))
@@ -30,11 +60,12 @@ MongoClient.connect(process.env.DB_URL, { useUnifiedTopology: true }, function(e
 })
 
 // 로그인
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const session = require('express-session');
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
+const session = require('express-session')
 const { render } = require('express/lib/response')
 const connect = require('passport/lib/framework/connect')
+const res = require('express/lib/response')
 
 // app.use() -> 미들웨어
 // 웹서버는 요청-응답해주는 머신
@@ -74,13 +105,13 @@ app.post('/login', passport.authenticate('local', {
 // 에러메시지는 에러메시지
 
 // 현재 코드는 보안이 쓰레기 비번 암호화 해야함
+// 아이디 비밀번호 일치 확인
 passport.use(new LocalStrategy({
   usernameField: 'id',
   passwordField: 'pw',
   session: true,
   passReqToCallback: false,
 }, function (입력한아이디, 입력한비번, done) {
-  //console.log(입력한아이디, 입력한비번)
   db.collection('customer').findOne({ id: 입력한아이디 }, function (에러, 결과) {
     if (에러) return done(에러)
 
@@ -94,7 +125,6 @@ passport.use(new LocalStrategy({
 }))
 
 // 세션 데이터 만들기
-
 // id를 이용해서 세션을 저장시킴(로그인 성공시 발동)
 passport.serializeUser(function (user, done) {
   done(null, user.id)
@@ -112,6 +142,7 @@ passport.deserializeUser(function (아이디, done) {  // 아이디는 위에 �
 app.get('/logout', function(req, res) {
   req.logout()
   
+  // connecct.sid 라는 세션을 삭제
   req.session.save(function () {
     res.clearCookie('connect.sid')
     res.redirect('/')
@@ -147,7 +178,6 @@ app.get('/', function(req, res) {
   else {
     res.render('index.ejs', {session: "false"});
   }
-  // res.render('index.ejs')
 })
 
 // 기기 현황 페이지 이동
@@ -158,7 +188,6 @@ app.get('/macStatus', function(req, res) {
   else {
     res.render('macstatus.ejs', {session: "false"});
   }
-  // res.render('macstatus.ejs')
 })
 
 // 유의사항 페이지 이동
@@ -169,7 +198,6 @@ app.get('/caution', function(req, res) {
   else {
     res.render('caution.ejs', {session: "false"});
   }
-  // res.render('caution.ejs')
 })
 
 // 웨이팅 등록 페이지 이동
@@ -263,9 +291,19 @@ app.post('/wait', 로그인했니, function(req, res){
   })
 })
 
+// 웨이팅 신청이 되어있으면 뿌려주는 페이지
+app.get('/waitalready', 로그인했니, function(req, res) {
+  console.log(req.user)
+  res.render('waitalready.ejs')
+})
+
+// 웨이팅 신청 성공하면 뿌려주는 페이지
+app.get('/waitsuccess', 로그인했니, function(req, res) {
+  console.log(req.user)
+  res.render('waitsuccess.ejs')
+})
 
 // 웨이팅 확인 페이지 이동
-//toarray로 변경---------------------------------------------
 app.get('/waitcheck', 로그인했니, function(req, res) {
   console.log(req.user)
 
@@ -315,18 +353,6 @@ app.get('/waitcheck', 로그인했니, function(req, res) {
   })
 })
 
-// 웨이팅 신청이 되어있으면 뿌려주는 페이지
-app.get('/waitalready', 로그인했니, function(req, res) {
-  console.log(req.user)
-  res.render('waitalready.ejs')
-})
-
-// 웨이팅 신청 성공하면 뿌려주는 페이지
-app.get('/waitsuccess', 로그인했니, function(req, res) {
-  console.log(req.user)
-  res.render('waitsuccess.ejs')
-})
-
 // 웨이팅 등록하고 기기 작동시키기 전
 // 본인 대기번호와 앞에 몊명 남았는지 확인 가능
 app.get('/bwaituse', 로그인했니, function(req, res) {
@@ -368,13 +394,12 @@ app.get('/bwaituse', 로그인했니, function(req, res) {
       })
     }
     else if(찾았니 == "못찾음"){
-      console.log('에레렐레레레레레ㅔㄹ레ㅔ')
+      console.log('NONE')
     }
   })
 })
 
 // 웨이팅 등록하고 기기 작동시킨 후
-// 
 app.get('/awaituse', 로그인했니, function(req, res) {
   console.log(req.user)
   res.render('awaituse.ejs')
@@ -459,3 +484,5 @@ app.post('/mypage', 로그인했니, function(req, res) {
     }
   })
 })
+
+//-----------------------------------------
